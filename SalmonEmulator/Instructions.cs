@@ -50,42 +50,42 @@
 
         public static void JumpIfEqual(uint newAddress)
         {
-            if (Flags.zero)
+            if (Flags.Zero)
             {
                 Register.instructionPointer = newAddress;
             }
         }
         public static void JumpIfNotEqual(uint newAddress)
         {
-            if (!Flags.zero)
+            if (!Flags.Zero)
             {
                 Register.instructionPointer = newAddress;
             }
         }
         public static void JumpIfGreater(uint newAddress)
         {
-            if (!Flags.sign && !Flags.zero)
+            if (!Flags.Sign && !Flags.Zero)
             {
                 Register.instructionPointer = newAddress;
             }
         }
         public static void JumpIfGreaterOrEqual(uint newAddress)
         {
-            if (!Flags.sign)
+            if (!Flags.Sign)
             {
                 Register.instructionPointer = newAddress;
             }
         }
         public static void JumpIfLess(uint newAddress)
         {
-            if (Flags.sign && !Flags.zero)
+            if (Flags.Sign && !Flags.Zero)
             {
                 Register.instructionPointer = newAddress;
             }
         }
         public static void JumpIfLessOrEqual(uint newAddress)
         {
-            if (Flags.sign)
+            if (Flags.Sign)
             {
                 Register.instructionPointer = newAddress;
             }
