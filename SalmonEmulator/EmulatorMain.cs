@@ -6,7 +6,7 @@ namespace SalmonEmulator
     {
         static void Main(string[] args)
         {
-
+            
 
         }
     }
