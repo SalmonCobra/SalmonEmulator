@@ -36,7 +36,7 @@ namespace SalmonEmulator
         label,
         register,
         numeric,
-        memPointer,
+        address,
         comment,
         comma,
         whitespace,
