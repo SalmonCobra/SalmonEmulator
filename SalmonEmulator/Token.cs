@@ -8,7 +8,7 @@ namespace SalmonEmulator
 {
     public enum TokenType
     {
-        mov,
+        nop,
         ld,
         li,
         add,
@@ -41,7 +41,7 @@ namespace SalmonEmulator
         comma,
         whitespace,
         newline,
-
+        Identifier,
 
         ERROR,
         EOF

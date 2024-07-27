@@ -1,6 +1,8 @@
-﻿namespace SalmonEmulator
+﻿using System.Text.RegularExpressions;
+
+namespace SalmonEmulator
 {
-    public static class Op
+    public static class Instructions
     {
 
         public static void Add(uint source1, uint source2)
@@ -38,6 +40,17 @@
             Register.LoadImmediate(0, source1 << (int)source2);
         }
 
+
+        public static void LoadImmediate(string source1, uint source2)
+        {
+            if (Regex.IsMatch(source1, "(^\\[)(0x[0-9a-f]+)(]$)") || Regex.IsMatch(source1, "(^\\[)(0b[01]+)(]$)") || Regex.IsMatch(source1, "(^\\[)(\\d+)(]$)"))
+            {
+                Ram.Store((uint)Parsers.ParseAddress(source1), source2);
+            } else if (Regex.IsMatch(source1, "^r[0-9]+$"))
+            {
+                Register.LoadImmediate((uint)Parsers.ParseRegister(source1), source2);
+            }
+        }
 
 
 

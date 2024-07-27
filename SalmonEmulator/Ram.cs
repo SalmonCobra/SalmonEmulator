@@ -8,7 +8,7 @@ namespace SalmonEmulator
 {
     public static class Ram
     {
-        private static uint[] value = new uint[2048];
+        private static uint[] value = new uint[2048000];
 
         public static void SetRamSize(uint size)
         {

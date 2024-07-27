@@ -1,31 +1,88 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace SalmonEmulator
 {
-    public class Lexer
+    public static class Lexer
     {
-        private readonly string source;
-        private int position;
-        public Lexer(string source1)
+        public static string source = "";
+
+        private static int position = 0;
+        private static uint line = 0;
+
+        private static Token ParseIdentifier()
         {
-            source = source1;
-            position = 0;
+            var startPos = position;
+            var pos = startPos + 1;
+
+            var _source = source;
+
+            while ((uint)pos < (uint)_source.Length)
+            {
+                var c = _source[pos];
+                if (!char.IsAsciiLetter(c) && !char.IsAsciiDigit(c) && c != '_')
+                {
+                    break;
+                }
+                pos++;
+            }
+            position = pos;
+
+            var text = _source[startPos..(pos - startPos)];
+            return new Token(TokenType.Identifier, text);
         }
-        public uint line = 0;
-        public Token GetNextToken()
+
+        
+        private static Token GetNextToken()
         {
+
+
+            if (source == null) { throw new Exception("No Source"); }
+
+
+
+
+
             // End Of File
-            if (position == source.Length)
+            if (position >= source.Length)
             {
                 return new Token(TokenType.EOF, "EOF"); ;
             }
 
             // New Line
-            if (source[position] == '\n')
+            if (source[position] == '\n' || source[position] == '\r')
             {
-                position += 1;
+                // Detect new line character and handle both \n and \r
+                if (source[position] == '\n' || (source[position] == '\r' && (position + 1 >= source.Length || source[position + 1] != '\n')))
+                {
+                    position += 1;
+                }
+                else if (source[position] == '\r' && source[position + 1] == '\n')
+                {
+                    position += 2;
+                }
+
                 line++;
                 return new Token(TokenType.newline, "newline");
+            }
+
+            // Lable
+            if (source[position] == '_')
+            {
+                var label = "";
+                while (position < source.Length && !(char.IsWhiteSpace(source[position]) || source[position].Equals(';')))
+                {
+                    label += source[position];
+                    position++;
+                }
+                if (Regex.IsMatch(label, "^_[a-z]+"))
+                {
+                    return new Token(TokenType.label, label);
+                }
+                else
+                {
+                    return new Token(TokenType.ERROR, $"R: Line {line}: Non-Numeric Type");
+                }
             }
 
             // Comments
@@ -33,7 +90,7 @@ namespace SalmonEmulator
             {
                 var comment = "";
 
-                while (position < source.Length && !(source[position] == '\n'))
+                while (position < source.Length && !(source[position] == '\n' || source[position] == '\r'))
                 {
                     comment += source[position];
                     position++;
@@ -49,28 +106,28 @@ namespace SalmonEmulator
             }
 
             // Whitespace
-            if (Char.IsWhiteSpace(source[position]))
+            if (source[position].Equals(' ') || source[position].Equals('\t'))
             {
                 position += 1;
-                //return new Token(TokenType.whitespace, " ");
+                return new Token(TokenType.whitespace, " ");
             }
 
             // Numerics 
             if (char.IsNumber(source[position]))
             {
                 var numeric = "";
-                while (position < source.Length && !(source[position] == '\n'))
+                while (position < source.Length && !(char.IsWhiteSpace(source[position]) || source[position].Equals(',') || source[position].Equals(';')))
                 {
                     numeric += source[position];
                     position++;
                 }
-                if (Regex.IsMatch(numeric, "^\\d+$|^0b[01]+$|^0x[0-9a-f]+$"))
+                if (Regex.IsMatch(numeric, "^\\d+|^0b[01]+|^0x[0-9a-f]+"))
                 {
                     return new Token(TokenType.numeric, numeric);
                 }
                 else
                 {
-                    return new Token(TokenType.ERROR, $"Line {line}: Non-Numeric Type");
+                    return new Token(TokenType.ERROR, $"N: Line {line}: Non-Numeric Type");
                 }
             }
 
@@ -78,18 +135,18 @@ namespace SalmonEmulator
             if (source[position] == 'r')
             {
                 var register = "";
-                while (position < source.Length && !(source[position] == '\n'))
+                while (position < source.Length && !(char.IsWhiteSpace(source[position]) || source[position].Equals(',') || source[position].Equals(';')))
                 {
                     register += source[position];
                     position++;
                 }
-                if (Regex.IsMatch(register, "^r[0-9]+$"))
+                if (Regex.IsMatch(register, "^r[0-9]+"))
                 {
                     return new Token(TokenType.register, register);
                 }
                 else
                 {
-                    return new Token(TokenType.ERROR, $"Line {line}: Non-Numeric Type");
+                    return new Token(TokenType.ERROR, $"R: Line {line}: Non-Numeric Type");
                 }
             }
 
@@ -97,7 +154,7 @@ namespace SalmonEmulator
             if (source[position] == '[')
             {
                 var address = "";
-                while ((position < source.Length && !(source[position] == '\n')) && !(source[position - 1] == ']'))
+                while ((position < source.Length && !char.IsWhiteSpace(source[position]) && !(source[position - 1] == ']')))
                 {
                     address += source[position];
                     position++;
@@ -109,21 +166,25 @@ namespace SalmonEmulator
                 }
                 else
                 {
-                    return new Token(TokenType.ERROR, $"Line {line}: Non-Numeric Type");
+                    return new Token(TokenType.ERROR, $"MA: Line {line}: Non-Numeric Type");
                 }
 
+            }
+
+            if (source[position] == 'n' && source.AsSpan(position, 3).SequenceEqual("nop"))
+            {
+                position += 3;
+                return new Token(TokenType.nop, "nop");
             }
 
 
 
 
-
-
-
-            if (source[position] == 'm' && source.AsSpan(position, 3).SequenceEqual("mov"))
+            
+            if (source[position] == 'n' && source.AsSpan(position, 3).SequenceEqual("nop"))
             {
                 position += 3;
-                return new Token(TokenType.mov, "mov");
+                return new Token(TokenType.nop, "nop");
             }
 
             if (source[position] == 'l' && source.AsSpan(position, 2).SequenceEqual("ld"))
@@ -165,6 +226,7 @@ namespace SalmonEmulator
             if (source[position] == 'e' && source.AsSpan(position, 3).SequenceEqual("xor"))
             {
                 position += 3;
+
                 return new Token(TokenType.xor, "xor");
             }
 
@@ -180,7 +242,7 @@ namespace SalmonEmulator
                 return new Token(TokenType.shl, "shl");
             }
 
-            if (source[position] == 'p' && source.AsSpan(position, 3).SequenceEqual("push"))
+            if (source[position] == 'p' && source.AsSpan(position, 4).SequenceEqual("push"))
             {
                 position += 4;
                 return new Token(TokenType.push, "push");
@@ -192,7 +254,7 @@ namespace SalmonEmulator
                 return new Token(TokenType.pop, "pop");
             }
 
-            if (source[position] == 'p' && source.AsSpan(position, 3).SequenceEqual("peek"))
+            if (source[position] == 'p' && source.AsSpan(position, 4).SequenceEqual("peek"))
             {
                 position += 4;
                 return new Token(TokenType.peek, "peek");
@@ -240,7 +302,7 @@ namespace SalmonEmulator
                 return new Token(TokenType.jle, "jle");
             }
 
-            if (source[position] == 'c' && source.AsSpan(position, 3).SequenceEqual("call"))
+            if (source[position] == 'c' && source.AsSpan(position, 4).SequenceEqual("call"))
             {
                 position += 4;
                 return new Token(TokenType.call, "call");
@@ -252,17 +314,32 @@ namespace SalmonEmulator
                 return new Token(TokenType.ret, "ret");
             }
 
-            if (source[position] == 'h' && source.AsSpan(position, 3).SequenceEqual("halt"))
+            if (source[position] == 'h' && source.AsSpan(position, 4).SequenceEqual("halt"))
             {
                 position += 4;
                 return new Token(TokenType.halt, "halt");
             }
-
+            
 
 
 
             return new Token(TokenType.ERROR, $"Line {line}: Unknown Token");
         }
+        
 
+        public static List<Token> GetTokens()
+        {
+            List<Token> tokens = new();
+            if (source != null)
+            {
+                while (Lexer.GetNextToken() is { type: not TokenType.EOF } token)
+                {
+                    tokens.Add(token);
+                }
+            }
+
+            return tokens;
+        }
+        
     }
 }
