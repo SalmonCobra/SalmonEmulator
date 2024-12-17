@@ -1,0 +1,14 @@
+/home/benjamin/Documents/Programming/SalmonEmulator/bin/Debug/net8.0/SalmonEmulator
+/home/benjamin/Documents/Programming/SalmonEmulator/bin/Debug/net8.0/SalmonEmulator.deps.json
+/home/benjamin/Documents/Programming/SalmonEmulator/bin/Debug/net8.0/SalmonEmulator.runtimeconfig.json
+/home/benjamin/Documents/Programming/SalmonEmulator/bin/Debug/net8.0/SalmonEmulator.dll
+/home/benjamin/Documents/Programming/SalmonEmulator/bin/Debug/net8.0/SalmonEmulator.pdb
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.GeneratedMSBuildEditorConfig.editorconfig
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.AssemblyInfoInputs.cache
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.AssemblyInfo.cs
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.csproj.CoreCompileInputs.cache
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.dll
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/refint/SalmonEmulator.dll
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.pdb
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.genruntimeconfig.cache
+/home/benjamin/Documents/Programming/SalmonEmulator/obj/Debug/net8.0/ref/SalmonEmulator.dll
