@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VXzUNPgga/UTzpdXJv3idyrHX3402SolHKJAWjC8Vd8VvwI62TkWfweknsq4MgHpKELRQC9VBF4dpn19rEcLqg==",
+  "dgSpecHash": "4sJyu8hism/xb8k6GZ91HWbRAD/nxAGBk6LBLiDHzxXMla8LctCh0Qu+c2s+l/PZj/MxA7cP+Tig8cab7Un44g==",
   "success": true,
-  "projectFilePath": "/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator.csproj",
+  "projectFilePath": "/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/SalmonEmulator.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

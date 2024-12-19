@@ -5,15 +5,9 @@ public class InstructionData
     private Action<string[]>? method;
     private string name = "";
     private int clockCycles = 0;
-    private List<ArgumentTypes> argumentOneRules = new();
-    private List<ArgumentTypes> argumentTwoRules = new();
-    private List<ArgumentTypes> argumentThreeRules = new();
-    public enum ArgumentTypes : byte
-    {
-        none,
-        numeric,
-        register,
-    }
+    private List<Token.TokenType> argumentOneRules = new();
+    private List<Token.TokenType> argumentTwoRules = new();
+    private List<Token.TokenType> argumentThreeRules = new();
 
     public Action<string[]>? Method
     {
@@ -33,19 +27,19 @@ public class InstructionData
         set { clockCycles = value; }
     }
 
-    public List<ArgumentTypes> ArgumentOneRules
+    public List<Token.TokenType> ArgumentOneRules
     {
         get { return argumentOneRules; }
         set { argumentOneRules = value; }
     }
 
-    public List<ArgumentTypes> ArgumentTwoRules
+    public List<Token.TokenType> ArgumentTwoRules
     {
         get { return argumentTwoRules; }
         set { argumentTwoRules = value; }
     }
 
-    public List<ArgumentTypes> ArgumentThreeRules
+    public List<Token.TokenType> ArgumentThreeRules
     {
         get { return argumentThreeRules; }
         set { argumentThreeRules = value; }
@@ -55,15 +49,38 @@ public class InstructionData
 
 public static class Instructions
 {
+    public static bool CheckTypes(Token.TokenType tokenType, List<Token.TokenType> listType)
+    {
+        foreach (Token.TokenType type in listType)
+        {
+            if (tokenType == type)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static List<InstructionData> instructionRegistry = new();
 
-    public static List<InstructionData.ArgumentTypes> CreateArgumentRules(params InstructionData.ArgumentTypes[] args)
+    public static (bool, InstructionData) SearchRegistry(string instruction)
     {
-        List<InstructionData.ArgumentTypes> argumentRules = new(args);
+        foreach (InstructionData instructionData in instructionRegistry)
+        {
+            if (instructionData.Name == instruction)
+            {
+                return (true, instructionData);
+            }
+        }
+        return (false, new InstructionData());
+    }
+
+    public static List<Token.TokenType> CreateArgumentRules(params Token.TokenType[] args)
+    {
+        List<Token.TokenType> argumentRules = new(args);
         return argumentRules;
     }
-    public static void RegisterInstruction(Action<string[]> method, string name, int clockCycles, List<InstructionData.ArgumentTypes> argumentOneRules, List<InstructionData.ArgumentTypes> argumentTwoRules, List<InstructionData.ArgumentTypes> argumentThreeRules)
+    public static void RegisterInstruction(Action<string[]> method, string name, int clockCycles, List<Token.TokenType> argumentOneRules, List<Token.TokenType> argumentTwoRules, List<Token.TokenType> argumentThreeRules)
     {
         InstructionData instructionData = new();
         instructionData.Method = method;
@@ -79,11 +96,18 @@ public static class Instructions
 
     public static void Nop(params string[] args)
     {
-        
+        foreach (string arg in args)
+        {
+            Console.WriteLine(arg);
+        }
     }
     public static void Ld(params string[] args)
     {
-
+        Console.WriteLine("ld");
+        foreach (string arg in args)
+        {
+            Console.WriteLine(arg);
+        }
     }
 
 
@@ -92,7 +116,7 @@ public static class Instructions
     static Instructions()
     {
         // register instructions here
-        RegisterInstruction(nop, "nop", 2, CreateArgumentRules(InstructionData.ArgumentTypes.none), CreateArgumentRules(InstructionData.ArgumentTypes.none), CreateArgumentRules(InstructionData.ArgumentTypes.none));
-        RegisterInstruction(ld, "ld", 7, CreateArgumentRules(InstructionData.ArgumentTypes.register), CreateArgumentRules(InstructionData.ArgumentTypes.numeric), CreateArgumentRules(InstructionData.ArgumentTypes.none));
+        RegisterInstruction(nop, "nop", 2, CreateArgumentRules(Token.TokenType.None), CreateArgumentRules(Token.TokenType.None), CreateArgumentRules(Token.TokenType.None));
+        RegisterInstruction(ld, "ld", 7, CreateArgumentRules(Token.TokenType.Register), CreateArgumentRules(Token.TokenType.Numeric), CreateArgumentRules(Token.TokenType.None));
     }
 }

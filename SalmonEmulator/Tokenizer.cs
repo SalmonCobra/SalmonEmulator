@@ -1,5 +1,3 @@
-using System.Transactions;
-
 namespace SalmonEmulator;
 
 public static class Tokenizer
@@ -14,8 +12,6 @@ public static class Tokenizer
 
     public static void Tokenize(string[] line)
     {
-        Console.WriteLine("Starting Tokenizing");
-
         char[] delimiters = { ' ', ',' };
         int labelCount = 0;
         List<string> filteredLine = new();
@@ -59,30 +55,24 @@ public static class Tokenizer
                 {
                     token.type = Token.TokenType.Instruction;
                     token.content = splitLine[w];
-                    token.line = l;
                     tokens.Add(token);
                 }
-                //--------------------------------------------------------------Instructions------------------------------------------------
 
                 //--------------------------------------------------------------Numerics----------------------------------------------------
                 if (Parsers.IsNumeric(splitLine[w])) // if its a numeric create a numeric token
                 {
                     token.type = Token.TokenType.Numeric;
                     token.content = Parsers.ConvertNumeric(splitLine[w]);
-                    token.line = l;
                     tokens.Add(token);
                 }
-                //--------------------------------------------------------------Numerics----------------------------------------------------
 
                 //--------------------------------------------------------------Registers---------------------------------------------------
                 if (w >= 1 && Parsers.IsRegister(splitLine[w])) // if its greater than the first word, and the parser says its a register... its mostlikely a register...
                 {
                     token.type = Token.TokenType.Register;
                     token.content = Parsers.GetRegisterId(splitLine[w]);
-                    token.line = l;
                     tokens.Add(token);
                 }
-                //--------------------------------------------------------------Registers----------------------------------------------------
 
                 //--------------------------------------------------------------Label Addresses----------------------------------------------
                 if (w >= 1 && splitLine[w].All(char.IsLetter))  // if its greater than the first word, and everything is letters, its probably a label. p r o b a b l y . . .
@@ -96,49 +86,43 @@ public static class Tokenizer
                     {
                         throw new Exception("That Label Doesnt Exist...");
                     }
-                    token.line = l;
                     tokens.Add(token);
                 }
-                //--------------------------------------------------------------Label Addresses-----------------------------------------------
             }
             instructions.Add(tokens); // this goes right befor the end bracket of the first for loop, to save tokens to instructions
         }
 
-
-        // --------------------------------------------debug
-        /*
-        Console.WriteLine("\nContents:");
-        foreach (List<Token> l in instructions)
-        {
-            foreach (Token t in l)
-            {
-                Console.Write(t.content + " ");
-            }
-            Console.WriteLine();
-        }
-        Console.WriteLine("\nType:");
-        foreach (List<Token> l in instructions)
-        {
-            foreach (Token t in l)
-            {
-                Console.Write(t.type + " ");
-            }
-            Console.WriteLine();
-        }
-        Console.WriteLine("\nLine:");
-        foreach (List<Token> l in instructions)
-        {
-            foreach (Token t in l)
-            {
-                Console.Write(t.line + " ");
-            }
-            Console.WriteLine();
-        }
-*/
-        Console.WriteLine("Tokenizing Complete");
-        // --------------------------------------------debug
     }
 
+    public static void PrintInstructions()
+    {
+        Console.WriteLine("\n---Labels---\n");
+        foreach (KeyValuePair<string, int> keyValuePair in labels)
+        {
+            Console.WriteLine($"{keyValuePair.Key} {keyValuePair.Value}");
+        }
+
+
+
+        Console.WriteLine("\n---Contents---\n");
+        foreach (List<Token> i in instructions)
+        {
+            foreach (Token t in i)
+            {
+                Console.Write($"{t.content} ");
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine("\n---Type---\n");
+        foreach (List<Token> i in instructions)
+        {
+            foreach (Token t in i)
+            {
+                Console.Write($"{t.type} ");
+            }
+            Console.WriteLine();
+        }
+    }
 
 }
 
@@ -146,14 +130,13 @@ public class Token
 {
     public enum TokenType
     {
-        none,
+        None,
         Instruction,
         Register,
         Numeric
     }
     private TokenType _type;
     private string _content = "";
-    private int _line = 0;
 
     public TokenType type
     {
@@ -164,11 +147,6 @@ public class Token
     {
         get { return _content; }
         set { _content = value; }
-    }
-    public int line
-    {
-        get { return _line; }
-        set { _line = value; }
     }
 }
 

@@ -3,6 +3,10 @@ namespace SalmonEmulator;
 public static class Parsers
 {
     // helpers
+    public static bool IsInstruction(string input)
+    {
+        return input.All(char.IsLetter);
+    }
     public static bool IsLabel(string input)
     {
         // check if the string contains any letters at all, then check if it ends with a colon.

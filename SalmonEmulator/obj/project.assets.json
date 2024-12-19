@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator.csproj",
+      "projectUniqueName": "/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/SalmonEmulator.csproj",
       "projectName": "SalmonEmulator",
-      "projectPath": "/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator.csproj",
+      "projectPath": "/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/SalmonEmulator.csproj",
       "packagesPath": "/home/benjamin/.nuget/packages/",
-      "outputPath": "/home/benjamin/Documents/Programming/SalmonEmulator/obj/",
+      "outputPath": "/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/benjamin/.nuget/NuGet/NuGet.Config"
