@@ -182,7 +182,7 @@ public static class Instructions
 
     public static void Push(params string[] args)
     {
-        NativeStack.Push(Parsers.TryParseRegister(args[1]));
+        NativeStack.Push(Parsers.TryParseRegister(args[0]));
     }
 
     public static void Pop(params string[] args)
@@ -289,12 +289,12 @@ public static class Instructions
     public static void Call(params string[] args)
     {
         NativeStack.Push(Emulator.programCounter);
+        Emulator.programCounter = Convert.ToInt32(args[0]);
         Emulator.skipIncrement = true;
     }
     public static void Ret(params string[] args)
     {
         Emulator.programCounter = NativeStack.Pop();
-        Emulator.skipIncrement = true;
     }
 
     public static void Cmp(params string[] args)
@@ -493,7 +493,7 @@ public static class Instructions
         CreateArgumentRules(Token.TokenType.None));
 
         RegisterInstruction(call, "call", 2,
-        CreateArgumentRules(Token.TokenType.None),
+        CreateArgumentRules(Token.TokenType.Numeric),
         CreateArgumentRules(Token.TokenType.None),
         CreateArgumentRules(Token.TokenType.None));
 
