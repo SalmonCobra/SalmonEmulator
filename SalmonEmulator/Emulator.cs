@@ -1,26 +1,35 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 
 namespace SalmonEmulator;
 public class Emulator
 {
+
     public static bool debug = true;
-    public static int clockSpeed = 2;
+    public static int clockSpeed = 500;
+    public static int programCounter = 0;
+    public static bool skipIncrement = false;
+    public static bool halted = false;
 
-
-    //public static string[] Assembly = File.ReadAllLines(@"../../../assemblies/Assembly.asm");
     public static string[] Assembly = File.ReadAllLines(@"assemblies/Assembly.asm");
     public static void Main()
     {
-
         Tokenizer.Tokenize(Assembly);
-        //Tokenizer.PrintInstructions();
 
+        StoreProgramToMemory();
+
+        RunProgram();
+
+    }
+
+    private static void StoreProgramToMemory()
+    {
         for (int l = 0; l < Tokenizer.instructions.Count; l++)
         {
-            string instruction = "";
-            InstructionData instructionData = new();
-            string[] arguments = { "", "", "" };
+            string instruction;
+            InstructionData instructionData;
+            string[] arguments = ["", "", ""];
 
             if (Tokenizer.instructions[l][0].type == Token.TokenType.Instruction)
             {
@@ -28,55 +37,70 @@ public class Emulator
                 (bool Success, instructionData) = Instructions.SearchRegistry(instruction);
                 if (!Success)
                 {
-                    throw new Exception("Instruction Not Registered");
+                    throw new Exception($"line {l + 1}: Instruction Not Registered");
                 }
+
+                Instructions.ValidateAndExtractArgument(l, 1, instructionData, arguments);
+                Instructions.ValidateAndExtractArgument(l, 2, instructionData, arguments);
+                Instructions.ValidateAndExtractArgument(l, 3, instructionData, arguments);
+
+                Instruction i = new Instruction();
+                i.ClockCycles = instructionData.ClockCycles;
+                i.Arguments = arguments;
+                i.Method = instructionData.Method;
+                Ram.SetInstruction(l, i);
+
             }
-            if (Tokenizer.instructions[l].Count >= 2)
+            if (Tokenizer.instructions[l][0].type == Token.TokenType.Numeric)
             {
-                var a = Tokenizer.instructions[l].Count;
-                if (Instructions.CheckTypes(Tokenizer.instructions[l][1].type, instructionData.ArgumentOneRules))
+                if (Tokenizer.instructions[l].Count == 1)
                 {
-                    arguments[0] = Tokenizer.instructions[l][1].content;
+                    Ram.SetData(l.ToString(), Convert.ToInt32(Tokenizer.instructions[l][0].content));
                 }
                 else
                 {
-                    throw new Exception($"Instruction '{instructionData.Name}' on line {l + 1} Doesnt Accept Type '{Tokenizer.instructions[l][1].type}'");
-                }
-            }
-            if (Tokenizer.instructions[l].Count >= 3)
-            {
-                if (Instructions.CheckTypes(Tokenizer.instructions[l][2].type, instructionData.ArgumentTwoRules))
-                {
-                    arguments[1] = Tokenizer.instructions[l][2].content;
-                }
-                else
-                {
-                    throw new Exception($"Instruction '{instructionData.Name}' on line {l + 1} Doesnt Accept Type '{Tokenizer.instructions[l][2].type}'");
-                }
-            }
-
-            if (Tokenizer.instructions[l].Count >= 4)
-            {
-                if (Instructions.CheckTypes(Tokenizer.instructions[l][3].type, instructionData.ArgumentThreeRules))
-                {
-                    arguments[2] = Tokenizer.instructions[l][3].content;
-                }
-                else
-                {
-                    throw new Exception($"Instruction '{instructionData.Name}' on line {l + 1} Doesnt Accept Type '{Tokenizer.instructions[l][3].type}'");
+                    throw new Exception($"Something is not right on line {l + 1}");
                 }
 
             }
-
-            Thread.Sleep(1000 / clockSpeed * instructionData.ClockCycles);
-            instructionData.Method?.Invoke(arguments);
         }
-
-
     }
 
+    private static void RunProgram()
+    {
+
+        while (halted == false && programCounter < Ram.length)
+        {
 
 
+            Instruction i = Ram.GetInstruction(programCounter);
+            if (i != null)
+            {
+                if (clockSpeed != 0)
+                {
+                    Thread.Sleep(1000 / clockSpeed * i.ClockCycles);
+                }
 
+                i.Method?.Invoke(i.Arguments);
+            }
+            else
+            {
+                if (clockSpeed != 0)
+                {
+                    Thread.Sleep(1000 / clockSpeed * 2);
+                }
+            }
+            if (!skipIncrement)
+            {
+                programCounter++;
+            } 
+            skipIncrement = false;
+        }
+        if (halted)
+        {
+            //Console.WriteLine("The Program Has Halted");
+        }
+
+    }
 
 }

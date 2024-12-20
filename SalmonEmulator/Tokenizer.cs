@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace SalmonEmulator;
 
 public static class Tokenizer
@@ -16,24 +18,32 @@ public static class Tokenizer
         int labelCount = 0;
         List<string> filteredLine = new();
 
-
         //------------------------------------------------------------------------------Labels And Whitespace-------------------------------------------------------------------------------
         for (int l = 0; l < line.Length; l++)
         {
+
+            // If there's a comment in the line, trim it off before processing.
+            int commentIndex = line[l].IndexOf(';');
+            if (commentIndex >= 0)
+            {
+                line[l] = line[l][0..commentIndex];  // Keep only the code before the comment
+            }
+
             var empty = false;
             string[] splitLine = line[l].Split(delimiters, StringSplitOptions.RemoveEmptyEntries); // these get reset each line
             for (int w = 0; w < splitLine.Length; w++)
             {
                 if (w == 0 && Parsers.IsLabel(splitLine[w]))  // if the first word is a label
                 {
-                    labels.Add(splitLine[w], (l - labelCount) - 1); // subtracting labelCount from L to make up for the difference when theres no lines for labels.      NOTE!!! NEW LINES MAY BREAK THIS     Consider removing whitespace from the input of everything.
+                    labels.Add(splitLine[w], (l - labelCount)); // subtracting labelCount from L to make up for the difference when theres no lines for labels.      NOTE!!! NEW LINES MAY BREAK THIS     Consider removing whitespace from the input of everything.
                     labelCount++;
                     empty = true;
-                } 
+                }
             }
             if (line[l].All(char.IsWhiteSpace))
             {
                 empty = true;
+                labelCount++;
             }
 
             if (!empty)
@@ -46,8 +56,11 @@ public static class Tokenizer
         for (int l = 0; l < filteredLine.Count; l++)
         {
             List<Token> tokens = new(); //---------------------------------------------------------// these get reset each line
+
+
             string[] splitLine = filteredLine[l].Split(delimiters, StringSplitOptions.RemoveEmptyEntries); // these get reset each line
-            for (int w = 0; w < splitLine.Length ; w++)
+
+            for (int w = 0; w < splitLine.Length; w++)
             {
                 Token token = new Token();
                 //--------------------------------------------------------------Instructions------------------------------------------------
@@ -70,7 +83,7 @@ public static class Tokenizer
                 if (w >= 1 && Parsers.IsRegister(splitLine[w])) // if its greater than the first word, and the parser says its a register... its mostlikely a register...
                 {
                     token.type = Token.TokenType.Register;
-                    token.content = Parsers.GetRegisterId(splitLine[w]);
+                    token.content = splitLine[w];
                     tokens.Add(token);
                 }
 
@@ -88,11 +101,16 @@ public static class Tokenizer
                     }
                     tokens.Add(token);
                 }
+
             }
             instructions.Add(tokens); // this goes right befor the end bracket of the first for loop, to save tokens to instructions
-        }
 
+        }
     }
+
+
+
+
 
     public static void PrintInstructions()
     {
@@ -101,9 +119,6 @@ public static class Tokenizer
         {
             Console.WriteLine($"{keyValuePair.Key} {keyValuePair.Value}");
         }
-
-
-
         Console.WriteLine("\n---Contents---\n");
         foreach (List<Token> i in instructions)
         {
@@ -123,6 +138,8 @@ public static class Tokenizer
             Console.WriteLine();
         }
     }
+
+
 
 }
 
