@@ -180,6 +180,12 @@ public static class Instructions
 
     }
 
+    public static void Mov(params string[] args)
+    {
+        Registers.SetRegister(Parsers.GetRegisterId(args[0]), Registers.GetRegister(Parsers.GetRegisterId(args[1])));
+
+    }
+
     public static void Push(params string[] args)
     {
         NativeStack.Push(Parsers.TryParseRegister(args[0]));
@@ -377,6 +383,7 @@ public static class Instructions
     public static Action<string[]> ldi = Ldi;
     public static Action<string[]> ld = Ld;
     public static Action<string[]> st = St;
+    public static Action<string[]> mov = Mov;
     public static Action<string[]> push = Push;
     public static Action<string[]> pop = Pop;
     public static Action<string[]> peek = Peek;
@@ -434,6 +441,11 @@ public static class Instructions
 
         RegisterInstruction(st, "st", 6,
         CreateArgumentRules(Token.TokenType.Numeric),
+        CreateArgumentRules(Token.TokenType.Register),
+        CreateArgumentRules(Token.TokenType.None));
+
+        RegisterInstruction(mov, "mov", 2,
+        CreateArgumentRules(Token.TokenType.Register),
         CreateArgumentRules(Token.TokenType.Register),
         CreateArgumentRules(Token.TokenType.None));
 

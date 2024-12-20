@@ -13,3 +13,4 @@
 /home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.pdb
 /home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.genruntimeconfig.cache
 /home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/obj/Debug/net8.0/ref/SalmonEmulator.dll
+/home/benjamin/Documents/Programming/SalmonEmulator/SalmonEmulator/obj/Debug/net8.0/SalmonEmulator.sourcelink.json

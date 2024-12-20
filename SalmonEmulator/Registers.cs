@@ -15,7 +15,7 @@ public static class Registers
     };
     public static int GetRegister(string index)
     {
-        return registers[Convert.ToInt32(index)];
+        return registers[Convert.ToInt32(index) - 1]; // convert to one indexed
     }
     public static bool GetFlag(string flag)
     {
@@ -25,7 +25,7 @@ public static class Registers
 
     public static void SetRegister(string index, int value)
     {
-        registers[Convert.ToInt32(index)] = value;
+        registers[Convert.ToInt32(index) - 1] = value; // convert to one indexed
     }
 
     public static void SetFlag(string flag, bool value)

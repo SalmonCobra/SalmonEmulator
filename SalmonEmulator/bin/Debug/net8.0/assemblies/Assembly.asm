@@ -8,6 +8,7 @@
 ; ldi r, i
 ; ld r, ar
 ; st a, ir
+; mov r, r
 ; push ir
 ; pop r
 ; peek r
@@ -33,20 +34,32 @@
 
 ; ----- EXAMPLE PROGRAM ----- ;
 
-ldi r0, 1
 ldi r1, 1
+ldi r2, 2
 
-call subroutine
+call multiply
 call print
+
 
 halt
 
-subroutine:
-add r0, r1
-ret
+multiply:
+    mov r3, r2 ; r3 = the multiple
+    mov r4, r2
+    mov r2, r1
+
+    multiply_loop:
+        cmp r3, 1
+        jeq done
+        add r1, r2
+        sub r3, 1
+        jmp multiply_loop
+    done:
+        mov r2, r4
+        ret
 
 print:
-out 1, r0
-ret
+    out 1, r1
+    ret
 
 ; ----- EXAMPLE PROGRAM ----- ;

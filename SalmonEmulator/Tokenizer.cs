@@ -88,7 +88,7 @@ public static class Tokenizer
                 }
 
                 //--------------------------------------------------------------Label Addresses----------------------------------------------
-                if (w >= 1 && splitLine[w].All(char.IsLetter))  // if its greater than the first word, and everything is letters, its probably a label. p r o b a b l y . . .
+                if (w >= 1 && !Parsers.IsRegister(splitLine[w]) && splitLine[w].Any(char.IsLetter))  // if its greater than the first word, and everything is letters, its probably a label. p r o b a b l y . . .
                 {
                     if (labels.TryGetValue(splitLine[w] + ":", out int value)) // check if its in the label dictionary, and if its not well... TOO BAD FOR YOU LOLOL.
                     {

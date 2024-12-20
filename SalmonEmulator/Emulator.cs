@@ -7,7 +7,7 @@ public class Emulator
 {
 
     public static bool debug = true;
-    public static int clockSpeed = 500;
+    public static int clockSpeed = 50;
     public static int programCounter = 0;
     public static bool skipIncrement = false;
     public static bool halted = false;
@@ -20,6 +20,7 @@ public class Emulator
         StoreProgramToMemory();
 
         RunProgram();
+        
 
     }
 
