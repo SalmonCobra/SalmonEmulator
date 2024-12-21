@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SalmonEmulator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+54c46ae1afa0c6f5cf0310e7c329dc3e9b435cfc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12be4d7c0915886611a507d089afca177d241239")]
 [assembly: System.Reflection.AssemblyProductAttribute("SalmonEmulator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SalmonEmulator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

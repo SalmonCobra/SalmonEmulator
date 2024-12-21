@@ -15,7 +15,13 @@ public static class Parsers
     public static bool IsRegister(string input)
     {
         // check if the first letter is r, then check if the remaining characters are numerics.
-        return input.StartsWith("r") && input[1..].All(char.IsDigit);
+        if (input.Length != 1)
+        {
+            return input.StartsWith("r") && input[1..].All(char.IsDigit);
+        } else {
+            return false;
+        }
+        
     }
     public static bool IsDecNumeric(string input)
     {

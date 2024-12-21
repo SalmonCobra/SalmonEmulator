@@ -151,7 +151,12 @@ public static class Instructions
 
     public static void Out(params string[] args)
     {
-        string a = Parsers.TryParseRegister(args[1]).ToString();
+        string a = "";
+        if (args[1] != "")
+        {
+            a = Parsers.TryParseRegister(args[1]).ToString();
+        }
+        
         Ports.UsePort(Convert.ToInt32(args[0]), true, a);
     }
 

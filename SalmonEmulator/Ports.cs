@@ -12,6 +12,16 @@ public static class Ports
                 case 1:
                     Console.WriteLine(value);
                     break;
+                case 10:
+                    Display.SetPixel(Convert.ToByte((Convert.ToInt32(value) & 0xff000) >> 12), Convert.ToByte((Convert.ToInt32(value) & 0xff0) >> 4), Convert.ToByte(Convert.ToInt32(value) & 0xf));
+                    break;
+                case 11:
+                    Display.PrintDisplay();
+                    break;
+                case 12:
+                    Display.SetPixel(Convert.ToByte((Convert.ToInt32(value) & 0xff000) >> 12), Convert.ToByte((Convert.ToInt32(value) & 0xff0) >> 4), Convert.ToByte(Convert.ToInt32(value) & 0xf));
+                    Display.PrintDisplay();
+                    break;
 
             }
             return "";

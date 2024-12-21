@@ -6,7 +6,7 @@ namespace SalmonEmulator;
 
 public static class Ram
 {
-    public const int length = 1024;
+    public const int length = 2048;
 
 
 

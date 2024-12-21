@@ -2,7 +2,7 @@ namespace SalmonEmulator;
 
 public static class NativeStack
 {
-    private static System.Collections.Generic.Stack<int> stack = new();
+    private static Stack<int> stack = new();
 
     public static void Push(int value)
     {
@@ -14,6 +14,6 @@ public static class NativeStack
     }
     public static int Pop()
     {
-        return stack.Peek();
+        return stack.Pop();
     }
 }
